@@ -5,6 +5,7 @@ import ButtonItem from '@/components/ButtonItem.vue'
 import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
+import { setCookies } from '@/composables/cookies'
 
 interface Errors {
   email: string[]
@@ -27,8 +28,9 @@ const onSubmit = async (e: Event) => {
         email: emailField.value,
         password: passwordField.value,
       })
-      if (response.status === 200) {
+      if (response.status === 201) {
         localStorage.setItem('token', response.data.access_token)
+        // setCookies('authToken', response.data.access_token, 1)
         router.push({ name: 'profile' })
       }
     } catch (error) {

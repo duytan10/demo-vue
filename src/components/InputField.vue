@@ -4,7 +4,8 @@ defineProps({
   type: { type: String, required: true },
   label: { type: String, required: true },
   disabled: Boolean,
-  errors: { type: Array },
+  error: String,
+  required: { type: Boolean, default: false },
 })
 
 const model = defineModel()
@@ -21,9 +22,9 @@ const model = defineModel()
         v-model="model"
         :disabled="disabled"
       />
-      <label class="form__label" v-text="label"></label>
+      <label :class="`form__label ${required ? 'required' : ''}`" v-text="label"></label>
     </div>
-    <small v-for="error in errors" v-text="error"></small>
+    <small v-text="error"></small>
   </div>
 </template>
 
@@ -60,6 +61,11 @@ small {
   font-size: 1rem;
   pointer-events: none;
   transition: all 0.5s ease-in-out;
+}
+
+.form__label.required::after {
+  content: ' *';
+  color: #fb2c36;
 }
 
 .form__input:focus ~ .form__label,
