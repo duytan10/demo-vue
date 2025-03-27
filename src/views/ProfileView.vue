@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import ButtonItem from '@/components/ButtonItem.vue'
 import InputField from '@/components/InputField.vue'
+import { deleteCookie, getCookie } from '@/composables/cookies'
 import axios from 'axios'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -14,7 +16,8 @@ interface userInfo {
 
 const router = useRouter()
 const userInfor: userInfo = reactive({ email: '', firstName: '', lastName: '', phone: '' })
-const token = localStorage.getItem('token')
+// const token = localStorage.getItem('token')
+const token = getCookie('authToken')
 axios
   .get('http://localhost:3000/user/profile', {
     headers: { Authorization: `Bearer ${token}` },
@@ -27,6 +30,11 @@ axios
     localStorage.removeItem('token')
     router.push({ path: '/' })
   })
+
+function signOut() {
+  deleteCookie('authToken')
+  router.push({ path: '/' })
+}
 </script>
 
 <template>
@@ -61,6 +69,7 @@ axios
       v-model="userInfor.phone"
     />
     <InputField label="Age" type="number" name="age" :disabled="true" v-model="userInfor.age" />
+    <ButtonItem type="button" :onClick="signOut">Sign out</ButtonItem>
   </div>
 </template>
 

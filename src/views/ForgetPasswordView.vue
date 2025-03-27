@@ -7,7 +7,7 @@ import { ref } from 'vue'
 import { toast } from 'vue3-toastify'
 import * as yup from 'yup'
 
-const { defineField, handleSubmit, errors } = useForm({
+const { defineField, handleSubmit, errors, isSubmitting } = useForm({
   validationSchema: yup.object({
     email: yup.string().email('Email must be a valid email').trim().required('Email is required'),
   }),
@@ -28,7 +28,10 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div v-if="result">Please check your email, a password reset link has been sent</div>
+  <div v-if="result">
+    <p>Please check your email, a password reset link has been sent</p>
+    <RouterLink to="/">Back to login page</RouterLink>
+  </div>
   <form v-else>
     <h1 class="title">Forget Password</h1>
     <InputField
@@ -39,7 +42,9 @@ const onSubmit = handleSubmit(async (values) => {
       v-model="email"
       v-bind="emailProps"
     />
-    <ButtonItem type="button" :onClick="onSubmit">Get Password</ButtonItem>
+    <ButtonItem type="button" :onClick="onSubmit" :isLoading="isSubmitting" :disabled="isSubmitting"
+      >Get Password</ButtonItem
+    >
   </form>
 </template>
 

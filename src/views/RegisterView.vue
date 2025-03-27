@@ -3,6 +3,7 @@ import ButtonItem from '@/components/ButtonItem.vue'
 import InputField from '@/components/InputField.vue'
 import axios from 'axios'
 import { useForm } from 'vee-validate'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import * as yup from 'yup'
@@ -41,22 +42,25 @@ const [age, ageProps] = defineField('age')
 const [password, passwordProps] = defineField('password')
 const [confirmPassword, confirmPasswordProps] = defineField('confirmPassword')
 
+const success = ref(false)
+
 const onSubmit = handleSubmit(async (values) => {
   const { confirmPassword, ...data } = values
   try {
     await axios.post('http://localhost:3000/auth/register', { ...data })
-    toast.success('Register successful!')
-    setTimeout(() => {
-      router.push({ path: '/' })
-    }, 2000)
+    success.value = true
   } catch (error) {
-    toast.error(error)
+    toast.error(`${error.response?.data?.error}: ${error.response?.data?.message}`)
   }
 })
 </script>
 
 <template>
-  <form>
+  <div v-if="success">
+    <p>Please check your email to activate an account</p>
+    <RouterLink to="/">Back to login</RouterLink>
+  </div>
+  <form v-else>
     <h1 className="title">Register</h1>
     <InputField
       v-model="email"

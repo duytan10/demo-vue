@@ -43,7 +43,7 @@ const onSubmit = handleSubmit(async (values) => {
     })
     result.value = true
   } catch (error) {
-    toast.error(error)
+    toast.error(`${error.response?.data?.error}: ${error.response?.data?.message}`)
   }
 })
 </script>
@@ -71,7 +71,7 @@ const onSubmit = handleSubmit(async (values) => {
       v-bind="confirmPasswordProps"
       :error="errors.confirmPassword"
     />
-    <ButtonItem type="submit" :onClick="onSubmit" :disabled="isSubmitting"
+    <ButtonItem type="submit" :onClick="onSubmit" :disabled="isSubmitting" :isLoading="isSubmitting"
       >Reset password</ButtonItem
     >
   </form>

@@ -28,15 +28,10 @@ const onSubmit = async (e: Event) => {
         email: emailField.value,
         password: passwordField.value,
       })
-      if (response.status === 201) {
-        localStorage.setItem('token', response.data.access_token)
-        // setCookies('authToken', response.data.access_token, 1)
-        router.push({ name: 'profile' })
-      }
+      setCookies('authToken', response.data.access_token, 1)
+      router.push({ name: 'profile' })
     } catch (error) {
-      if (error?.status === 401) {
-        toast.error(`Wrong email or password`)
-      }
+      toast.error(`${error.response?.data?.error}: ${error.response?.data?.message}`)
     }
   } else {
     if (!emailField.value) errors.email.push('Email should not be emty!')

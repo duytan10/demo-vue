@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
+import { getCookie } from '@/composables/cookies'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,7 +42,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from) => {
-  const token = localStorage.getItem('token')
+  // const token = localStorage.getItem('token')
+  const token = getCookie('authToken')
   if (!token && to.name === 'profile') return { name: 'login' }
   if (token && ['login', 'forget-password', 'register'].includes(to.name))
     return { name: 'profile' }
